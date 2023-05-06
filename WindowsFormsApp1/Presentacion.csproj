@@ -100,13 +100,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dominio\Dominio.csproj">
-      <Project>{af7b3c61-6d2a-409a-acae-e23152a26d54}</Project>
-      <Name>Dominio</Name>
+    <ProjectReference Include="..\Dominio\dominio.csproj">
+      <Project>{6D6442D0-FD79-4721-8955-B24CDC8CF7F9}</Project>
+      <Name>dominio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Negocio\Negocio.csproj">
-      <Project>{b5246cb9-41a9-49da-99fd-1b3c1d26bb7b}</Project>
-      <Name>Negocio</Name>
+    <ProjectReference Include="..\Negocio\negocio.csproj">
+      <Project>{E437865D-C15F-4FFF-88EF-F2C79700AB7C}</Project>
+      <Name>negocio</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

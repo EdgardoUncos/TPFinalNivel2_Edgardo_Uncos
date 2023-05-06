@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Dominio;
-using Negocio;
+using dominio;
+using negocio;
 
 namespace WindowsFormsApp1
 {
@@ -97,8 +97,7 @@ namespace WindowsFormsApp1
 
         private void btnAlta_Click(object sender, EventArgs e)
         {
-            //FrmAlta alta = new FrmAlta();
-            //alta.ShowDialog();
+            
             frmAltaArticulo alta = new frmAltaArticulo();
             alta.Text = "Agregar Articulo";
             alta.ShowDialog();
@@ -166,7 +165,7 @@ namespace WindowsFormsApp1
             
             if( filtro.Length >= 3)
             {
-                listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().Contains(filtro.ToUpper()) || x.Nombre.ToUpper().Contains(filtro.ToUpper()) || x.Descripcion.ToUpper().Contains(filtro.ToUpper()) || x.Marca.Descripcion.ToUpper().Contains(filtro.ToUpper()) || x.Categoria.Descripcion.ToUpper().Contains(filtro.ToUpper()));
+                listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().Contains(filtro.ToUpper()) || x.Nombre != null && x.Nombre.ToUpper().Contains(filtro.ToUpper()) || x.Descripcion!= null && x.Descripcion.ToUpper().Contains(filtro.ToUpper()) || x.Marca.Descripcion != null && x.Marca.Descripcion.ToUpper().Contains(filtro.ToUpper()) || x.Categoria.Descripcion != null && x.Categoria.Descripcion.ToUpper().Contains(filtro.ToUpper()));
                 
             }
             else
@@ -198,6 +197,7 @@ namespace WindowsFormsApp1
 
         private void btnFiltro_Click(object sender, EventArgs e)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
             try
             {
                 if (validarFiltro())
@@ -233,12 +233,19 @@ namespace WindowsFormsApp1
                     }
 
                     dgvArticulos.DataSource = null;
-                    dgvArticulos.DataSource = filtroAvanzado(campo, criterio, filtro, marca, categoria, precio, filtroPrecio);
+                    // filtro por consulta sql
+                    dgvArticulos.DataSource = negocio.FiltroAvanzadoSql(campo, criterio, filtro, marca, categoria, precio, filtroPrecio);
+
+                    // filtro en memoria de la lista usando findAll
+                    //dgvArticulos.DataSource = filtroAvanzado(campo, criterio, filtro, marca, categoria, precio, filtroPrecio);
                 }
                 else
                 {
                     dgvArticulos.DataSource = null;
-                    dgvArticulos.DataSource = filtroAvanzado(campo, criterio, filtro);
+                    //dgvArticulos.DataSource = filtroAvanzado(campo, criterio, filtro);
+                    // probamos filtro sql
+                    
+                    dgvArticulos.DataSource = negocio.FiltroAvanzadoSql(campo, criterio, filtro);
                 }
 
                 ocultarColumnas();
@@ -296,59 +303,70 @@ namespace WindowsFormsApp1
         {
             List<Articulo> listaFiltrada = new List<Articulo>();
 
-            if(campo == "Codigo")
+            try
             {
-                switch(criterio)
+                if (campo == "Codigo")
                 {
-                    case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().StartsWith(filtro.ToUpper()));
-                        break;
+                    switch (criterio)
+                    {
+                        case "Comienza con":
+                            listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().StartsWith(filtro.ToUpper()));
+                            //listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().StartsWith(filtro.ToUpper()));
+                            break;
 
-                    case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().EndsWith(filtro.ToUpper()));
-                        break;
+                        case "Termina con":
+                            listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().EndsWith(filtro.ToUpper()));
+                            break;
 
-                    case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().Contains(filtro.ToUpper()));
-                        break;
+                        case "Contiene":
+                            listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().Contains(filtro.ToUpper()));
+                            break;
+                    }
                 }
+                else if (campo == "Nombre")
+                {
+                    switch (criterio)
+                    {
+                        case "Comienza con":
+                            listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().StartsWith(filtro.ToUpper()));
+                            break;
+
+                        case "Termina con":
+                            listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().EndsWith(filtro.ToUpper()));
+                            break;
+
+                        case "Contiene":
+                            listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro.ToUpper()));
+                            break;
+                    }
+                }
+                else
+                {
+
+                    switch (criterio)
+                    {
+                        case "Comienza con":
+                            listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().StartsWith(filtro.ToUpper()));
+                            break;
+
+                        case "Termina con":
+                            listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().EndsWith(filtro.ToUpper()));
+                            break;
+
+                        case "Contiene":
+                            listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().Contains(filtro.ToUpper()));
+                            break;
+                    }
+                }
+
+                return listaFiltrada;
             }
-            else if(campo == "Nombre")
+            catch (Exception ex)
             {
-                switch (criterio)
-                {
-                    case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().StartsWith(filtro.ToUpper()));
-                        break;
 
-                    case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().EndsWith(filtro.ToUpper()));
-                        break;
-
-                    case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro.ToUpper()));
-                        break;
-                }
+                throw ex;
             }
-            else {
-
-                switch (criterio)
-                {
-                    case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().StartsWith(filtro.ToUpper()));
-                        break;
-
-                    case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().EndsWith(filtro.ToUpper()));
-                        break;
-
-                    case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().Contains(filtro.ToUpper()));
-                        break;
-                }
-            }
-
-            return listaFiltrada;
+            
         }
         private List<Articulo> filtroAvanzado(string campo, string criterio, string filtro, string marca, string categoria, string precio, string filtroPrecio)
         {
@@ -359,15 +377,15 @@ namespace WindowsFormsApp1
                 switch (criterio)
                 {
                     case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().StartsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().StartsWith(filtro.ToUpper()));
                         break;
 
                     case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().EndsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().EndsWith(filtro.ToUpper()));
                         break;
 
                     case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Codigo.ToUpper().Contains(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Codigo != null && x.Codigo.ToUpper().Contains(filtro.ToUpper()));
                         break;
                 }
             }
@@ -376,15 +394,15 @@ namespace WindowsFormsApp1
                 switch (criterio)
                 {
                     case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().StartsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Nombre != null && x.Nombre.ToUpper().StartsWith(filtro.ToUpper()));
                         break;
 
                     case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().EndsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Nombre != null && x.Nombre.ToUpper().EndsWith(filtro.ToUpper()));
                         break;
 
                     case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Nombre.ToUpper().Contains(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Nombre != null && x.Nombre.ToUpper().Contains(filtro.ToUpper()));
                         break;
                 }
             }
@@ -394,15 +412,15 @@ namespace WindowsFormsApp1
                 switch (criterio)
                 {
                     case "Comienza con":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().StartsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x =>x.Descripcion != null && x.Descripcion.ToUpper().StartsWith(filtro.ToUpper()));
                         break;
 
                     case "Termina con":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().EndsWith(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Descripcion != null && x.Descripcion.ToUpper().EndsWith(filtro.ToUpper()));
                         break;
 
                     case "Contiene":
-                        listaFiltrada = lista.FindAll(x => x.Descripcion.ToUpper().Contains(filtro.ToUpper()));
+                        listaFiltrada = lista.FindAll(x => x.Descripcion != null && x.Descripcion.ToUpper().Contains(filtro.ToUpper()));
                         break;
                 }
             }
@@ -434,6 +452,7 @@ namespace WindowsFormsApp1
             return listaFiltrada;
         }
 
+        
 
         private void cboPrecio_SelectedIndexChanged(object sender, EventArgs e)
         {

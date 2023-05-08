@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public class UtilidadesVarias
+    public static class UtilidadesVarias
     {
-        public void cargarImagen(PictureBox pbxArticulo, string url)
+        public static void cargarImagen(PictureBox pbxArticulo, string url)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public bool validarFiltro(ComboBox cboCampo, ComboBox cboCriterio, TextBox txtFiltro2)
+        public static bool validarFiltro(ComboBox cboCampo, ComboBox cboCriterio, TextBox txtFiltro2)
         {
             if (cboCampo.SelectedIndex < 0)
             {
@@ -55,7 +55,7 @@ namespace WindowsFormsApp1
             return false;
         }
 
-        private bool soloNumeros(string cadena)
+        public static bool soloNumeros(string cadena)
         {
             foreach (var caracter in cadena)
             {
@@ -63,6 +63,23 @@ namespace WindowsFormsApp1
                     return false;
             }
             return true;
+        }
+
+        public static bool validarCampos(TextBox codigo, TextBox nombre)
+        {
+            if(string.IsNullOrEmpty(codigo.Text))
+            {
+                MessageBox.Show("Debe ingresar al menos codigo");
+                return true;
+            }
+
+            if(string.IsNullOrEmpty(nombre.Text))
+            {
+                MessageBox.Show("Debe ingresar al menos el nombre");
+                return true;
+            }
+
+            return false;
         }
 
     }

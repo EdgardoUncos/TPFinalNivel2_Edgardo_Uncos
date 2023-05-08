@@ -13,10 +13,10 @@ using negocio;
 
 namespace WindowsFormsApp1
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         private List<Articulo> lista;
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
         }
@@ -156,6 +156,7 @@ namespace WindowsFormsApp1
         {
             dgvArticulos.Columns["Id"].Visible = false;
             dgvArticulos.Columns["UrlImagen"].Visible = false;
+            dgvArticulos.Columns["Precio"].DefaultCellStyle.Format = "0.00";
         }
 
         private void txtFiltro_TextChanged(object sender, EventArgs e)

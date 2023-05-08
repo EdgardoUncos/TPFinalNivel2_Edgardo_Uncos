@@ -62,14 +62,17 @@ namespace WindowsFormsApp1
 
             try
             {
+                if (UtilidadesVarias.validarCampos(txtCodigo, txtNombre))
+                    return;
+
                 if (articulo == null)
                     articulo = new Articulo();
                 articulo.Nombre = txtNombre.Text;
                 articulo.Descripcion = txtDescripcion.Text;
                 articulo.UrlImagen = txtUrlImagen.Text;
-                articulo.Precio = decimal.Parse(txtPrecio.Text);
-                articulo.Marca = (Tipo)cboMarca.SelectedItem; // repasar esta parte
-                articulo.Categoria = (Tipo)cboCategoria.SelectedItem; // repasar esta parte
+                articulo.Precio = string.IsNullOrEmpty(txtPrecio.Text) ? 0 : decimal.Parse(txtPrecio.Text);
+                articulo.Marca = (Tipo)cboMarca.SelectedItem; 
+                articulo.Categoria = (Tipo)cboCategoria.SelectedItem;
 
                 if(articulo.Id != 0)
                 {

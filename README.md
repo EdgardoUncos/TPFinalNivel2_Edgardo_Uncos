@@ -17,9 +17,11 @@ Manejo de archivos de imagenes de articulos.
 
 <table>
     <tr> 
-        <td><img src="https://photos.app.goo.gl/g5X2hAZ4txSE5Gao7" width="100%" /></td>
-        <td><img src="https://i.postimg.cc/mgSDG9F2/css.png" width="100%" /><td> 
+        <td><img src="https://i.postimg.cc/nrNHKGWk/01.jpg" width="100%" /></td>
+        <td><img src="https://i.postimg.cc/SxFSJVCQ/02.png" width="100%" /><td> 
     </tr>
-    <tr><img src="https://uploads-ssl.webflow.com/5ef956a55caef588461ec7cf/5ef956a55caef50ed61ec7e2_formspree-logo-full-horizontal%402x.png" width="100%" /> <td></td> <td></td>
+    <tr> 
+        <td><img src="https://i.postimg.cc/bY5Njqvt/03.jpg" width="100%" /></td> 
+        <td><img src="https://i.postimg.cc/bY5Njqvt/03.jpg" width="100%" /></td>
     </tr>
 </table>
